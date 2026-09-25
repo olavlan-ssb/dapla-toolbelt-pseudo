@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: read
-  security-events: read
+  vulnerability-alerts: read
 
 jobs:
   report:
@@ -16,7 +16,7 @@ jobs:
       - name: Send high and critical Dependabot vulnerabilities to Slack
         uses: actions/github-script@v8
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -76,7 +76,7 @@ jobs:
               }
             }
 
-            const response = await fetch(process.env.SLACK_WEBHOOK, {
+            const response = await fetch(process.env.SLACK_WEBHOOK_URL, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ blocks }),
