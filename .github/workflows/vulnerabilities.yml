@@ -2,7 +2,8 @@ name: Dependabot Slack Report
 
 on:
   schedule:
-    - cron: "0 7 * * 1"
+    - cron: "0 7 * * 1"   # Monday: high and critical alerts
+    - cron: "0 7 * * 2-5" # Tuesday-Friday: critical alerts
   workflow_dispatch:
 
 permissions:
@@ -17,6 +18,7 @@ jobs:
         uses: actions/github-script@v8
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SEVERITY: ${{ github.event_name == 'schedule' && github.event.schedule == '0 7 * * 2-5' && 'critical' || 'high,critical' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -26,7 +28,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 state: "open",
-                severity: "high,critical",
+                severity: process.env.SEVERITY,
                 per_page: 100,
               },
             );
@@ -58,7 +60,7 @@ jobs:
               },
             ];
 
-            for (const [severity, severityAlerts] of [["CRITICAL", critical], ["HIGH", high]]) {
+            for (const [severity, severityAlerts] of [["Critical", critical], ["High", high]]) {
               if (severityAlerts.length > 0) {
                 blocks.push({
                   type: "section",
