@@ -53,14 +53,7 @@ jobs:
             const blocks = [
               {
                 type: "header",
-                text: { type: "plain_text", text: "Dependabot vulnerabilities" },
-              },
-              {
-                type: "section",
-                text: {
-                  type: "mrkdwn",
-                  text: `*${context.repo.owner}/${context.repo.repo}*`,
-                },
+                text: { type: "plain_text", text: "${context.repo.owner}/${context.repo.repo}*" },
               },
             ];
 
