@@ -46,8 +46,9 @@ jobs:
             const formatAlert = (alert) => {
               const dependency = alert.dependency;
               const advisory = alert.security_advisory;
-              const fixed = advisory.first_patched_version?.identifier ?? "not available";
-              return `- <${alert.html_url}|${dependency.package.name}> (${dependency.manifest_path}), vulnerable ${alert.security_vulnerability.vulnerable_version_range}, fixed in ${fixed}`;
+              const fixed = alert.security_vulnerability?.first_patched_version?.identifier;
+              const fixedText = fixed ? `, fixed in ${fixed}` : "";
+              return `- <${alert.html_url}|${dependency.package.name}> (${dependency.manifest_path}), vulnerable ${alert.security_vulnerability.vulnerable_version_range}${fixedText}`;
             };
 
             const blocks = [
